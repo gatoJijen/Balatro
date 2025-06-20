@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Balatro",
   description: "Copia de Balatro",
+  icons: {
+    icon: "https://cdn2.steamgriddb.com/icon/6c3ee6dcff80d34567671bce66bc911e/32/256x256.png",
+  },
 };
 
 export default function RootLayout({
