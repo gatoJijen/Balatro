@@ -31,3 +31,12 @@ export interface propsAddDb {
     description?: string,
     value?: number |null;
 }
+
+
+
+
+export interface UserData {
+    displayName: string;
+    image: string;
+    categoria: string;
+};

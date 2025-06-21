@@ -35,3 +35,11 @@ body {
 .secondary-text{
   color: var(--secondary-text);
 }
+
+.bgImg1 {
+  /*background-image: url("https://cdn2.steamgriddb.com/grid/0b100b55b4d4d95ccc8cb20d6ad33e16.webp");*/
+  background-position: center;
+  background-size: contain;
+  background-clip: padding-box;
+  background-repeat: no-repeat;
+}

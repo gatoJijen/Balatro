@@ -20,7 +20,7 @@ const Page: React.FC = () => {
   const router = useRouter();
 
 
-  const saveUserToFirestore = async (uid: string, displayName: string, photoURL: string, categoria: string) => {
+  const saveUserToFirestore = async (uid: string, displayName: string, photoURL: string, categoria: string, jokers:any[], vouchers:any[], decks:any[], consumibles:any[], tags:any[], boosters:any[], jokersN:any[], vouchersN:any[], decksN:any[], consumiblesN:any[], tagsN:any[], boostersN:any[]) => {
     try {
       const userRef = doc(db, "users", uid);
       const snap = await getDoc(userRef);
@@ -37,6 +37,18 @@ const Page: React.FC = () => {
         photoURL,
         uid,
         categoria,
+        jokers,
+        jokersN,
+        vouchers,
+        vouchersN,
+        decks,
+        decksN,
+        consumibles,
+        consumiblesN,
+        tags,
+        tagsN,
+        boosters,
+        boostersN
       }, { merge: true }); // sólo afecta a este doc, sin borrar nada fuera de estas claves
 
       console.log("Usuario guardado en Firestore");
@@ -58,6 +70,7 @@ const Page: React.FC = () => {
       const defaultPhotoURL = "https://www.instagram.com/static/images/text_app/profile_picture/profile_pic.png/72f3228a91ee.png"
       const photoURL = user.photoURL || defaultPhotoURL;
       const defaultCategory = "user"
+      const defaultCollection: any[] = []
 
       // Guarda el usuario en Firestore
       await saveUserToFirestore(
@@ -65,6 +78,19 @@ const Page: React.FC = () => {
         displayName,
         photoURL,
         defaultCategory,
+        defaultCollection,
+        defaultCollection,
+        defaultCollection,
+        defaultCollection,
+        defaultCollection,
+        defaultCollection,
+        defaultCollection,
+        defaultCollection,
+        defaultCollection,
+        defaultCollection,
+        defaultCollection,
+        defaultCollection,
+
       );
       router.push("/game");
     } catch (err: any) {
@@ -77,7 +103,6 @@ const Page: React.FC = () => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
-        setLoading(true)
         //setDisplayName(user.displayName || "");
         //setUrl(user.photoURL || "https://www.instagram.com/static/images/text_app/profile_picture/profile_pic.png/72f3228a91ee.png");
         //handlePostRequest2(); // Llamamos a la función cada vez que se actualiza el usuario
@@ -93,7 +118,7 @@ const Page: React.FC = () => {
 
   return (
     <section className='flex flex-col h-dvh items-center justify-center'>
-      {loading ? (
+      {!loading ? (
         <>
           <header className='absolute h-full w-full z-[99]'>
             <nav className='w-full relative h-full overflow-hidden cursor-default'>

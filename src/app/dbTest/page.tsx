@@ -1,7 +1,7 @@
 "use client"
 import Loading from '@/components/Loading';
 import { auth, db } from '@/firebase/config';
-import { Decks, Jokers, propsAddDb } from '@/interfaces/global';
+import { Decks, Jokers, propsAddDb, UserData } from '@/interfaces/global';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { collection, doc, getDocs, limit, onSnapshot, orderBy, query, setDoc, where } from 'firebase/firestore';
 import Image from 'next/image';
@@ -9,69 +9,64 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
 
-interface UserData {
-  displayName: string;
-  image: string;
-  categoria: string;
-};
 
 const page = () => {
 
     const [user, setUser] = useState<User | null>(null);
-  const [uid, setUid] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [userData, setUserData] = useState<UserData | null>(null);
-  const router = useRouter();
+    const [uid, setUid] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [userData, setUserData] = useState<UserData | null>(null);
+    const router = useRouter();
 
-  const redirect = (url: string) => {
-    router.push(url);
-  };
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setUid(currentUser?.uid || '');
-
-      if (!currentUser) {
-        redirect('/');
-      }
-
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const usersRef = collection(db, 'users');
-        const q = query(usersRef, where('uid', '==', uid));
-        const querySnapshot = await getDocs(q);
-
-        if (!querySnapshot.empty) {
-          const docData = querySnapshot.docs[0].data();
-          const fetchedUserData: UserData = {
-            displayName: docData.displayName || '',
-            image: docData.image || '',
-            categoria: docData.categoria || '',
-          };
-          setUserData(fetchedUserData);
-
-          // Redirige si no es admin
-          if (fetchedUserData.categoria !== 'admin') {
-            redirect('/');
-          }
-        }
-      } catch (error) {
-        console.error('Error obteniendo datos del usuario:', error);
-      }
+    const redirect = (url: string) => {
+        router.push(url);
     };
 
-    if (uid) {
-      fetchUserData();
-    }
-  }, [uid]);
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            setUser(currentUser);
+            setUid(currentUser?.uid || '');
+
+            if (!currentUser) {
+                redirect('/');
+            }
+
+            setLoading(false);
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const usersRef = collection(db, 'users');
+                const q = query(usersRef, where('uid', '==', uid));
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    const docData = querySnapshot.docs[0].data();
+                    const fetchedUserData: UserData = {
+                        displayName: docData.displayName || '',
+                        image: docData.image || '',
+                        categoria: docData.categoria || '',
+                    };
+                    setUserData(fetchedUserData);
+
+                    // Redirige si no es admin
+                    if (fetchedUserData.categoria !== 'admin') {
+                        redirect('/');
+                    }
+                }
+            } catch (error) {
+                console.error('Error obteniendo datos del usuario:', error);
+            }
+        };
+
+        if (uid) {
+            fetchUserData();
+        }
+    }, [uid]);
 
 
 
