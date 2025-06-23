@@ -46,7 +46,7 @@ const page = () => {
         </picture>
       </nav>
       <footer className='flex items-center justify-evenly gap-4  h-[140px] rounded-lg py-[12px] bg-gray-900 px-[20px] primary-text mb-[25px] '>
-        <button className='bg-sky-900 w-[240px] h-[100px] font-bold text-4xl rounded-lg cursor-pointer hover:bg-sky-800 transition-all'>PLAY</button>
+        <Link href={'/game'} className='bg-sky-900 w-[240px] h-[100px] font-bold text-4xl rounded-lg cursor-pointer hover:bg-sky-800 transition-all'>PLAY</Link>
         <button className='bg-orange-500 w-[180px] h-[80px] font-bold text-2xl rounded-lg cursor-pointer hover:bg-orange-400 transition-all'>OPTIONS</button>
         <button onClick={() => setModalCollection(true)} className='bg-green-800 w-[240px] h-[100px] font-bold text-3xl rounded-lg cursor-pointer hover:bg-green-700 transition-all'>COLLECTION</button>
       </footer>
