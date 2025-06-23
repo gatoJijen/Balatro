@@ -1,8 +1,9 @@
-import { doc, getDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { db } from '@/firebase/config';
 
 type ConsumibleType = 'Tarot' | 'Planet' | 'Espectral';
+
 const useUserTypeC = (uid: string) => {
     const [counts, setCounts] = useState<{ Tarot: number; Planet: number; Espectral: number }>({
         Tarot: 0,
@@ -19,36 +20,25 @@ const useUserTypeC = (uid: string) => {
                 if (!userSnap.exists()) return;
 
                 const userData = userSnap.data();
-                const consumibleIds: string[] = userData.consumibles || [];
+                const consumibles: any[] = userData.consumibles || [];
 
-                if (!Array.isArray(consumibleIds) || consumibleIds.length === 0) return;
+                const typeCounts: { [key in ConsumibleType]: number } = {
+                    Tarot: 0,
+                    Planet: 0,
+                    Espectral: 0,
+                };
 
-                // Divide en bloques si hay muchos (Firestore limita el 'in' a 10 elementos por query)
-                const chunkSize = 10;
-                const chunks = Array.from({ length: Math.ceil(consumibleIds.length / chunkSize) }, (_, i) =>
-                    consumibleIds.slice(i * chunkSize, i * chunkSize + chunkSize)
-                );
-
-                const typeCounts = { Tarot: 0, Planet: 0, Espectral: 0 };
-
-                for (const chunk of chunks) {
-                    const q = query(collection(db, 'Consumibles'), where('__name__', 'in', chunk));
-                    const snapshot = await getDocs(q);
-
-                    snapshot.forEach(doc => {
-                        const data = doc.data();
-                        const type = data.type as string;
-
-                        if (['Tarot', 'Planet', 'Espectral'].includes(type)) {
-                            typeCounts[type as ConsumibleType]++;
-                        }
-
-                    });
+                // Recorremos el array de mapas y contamos por tipo
+                for (const item of consumibles) {
+                    const type:ConsumibleType = item?.type;
+                    if (type === 'Tarot' || type === 'Planet' || type === 'Espectral') {
+                        typeCounts[type]++;
+                    }
                 }
 
                 setCounts(typeCounts);
             } catch (error) {
-                console.error('Error al contar consumibles por tipo:', error);
+                console.error('Error al obtener consumibles por tipo:', error);
             }
         };
 
@@ -59,4 +49,5 @@ const useUserTypeC = (uid: string) => {
 
     return counts;
 };
-export default useUserTypeC
+
+export default useUserTypeC;

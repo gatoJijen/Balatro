@@ -37,6 +37,6 @@ export interface propsAddDb {
 
 export interface UserData {
     displayName: string;
-    image: string;
+    photoURL: string;
     categoria: string;
 };
